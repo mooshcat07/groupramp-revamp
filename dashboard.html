@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./css/site.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="toggle">
+        <a id="toggle-nav"><i class="fa fa-navicon cog"></i></a>
+      </div>
+    </div>
+    <div class="container">
+      <div class="sidebar" id="sidebar">
+        <a href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
+        <a href="form.html"><i class="fa fa-shopping-cart"></i> Forms</a>
+        <a href="tables.html"><i class="fa fa-shopping-bag"></i> Tables</a>
+      </div>
+      <div class="content">
+        <div class="summary-container">
+          <div class="summary">
+            <div class="summary-icon"><i class="fa fa-users"></i></div>
+            <div class="summary-content">
+              <div class="summary-heading">Users</div>
+              <div><h2 id="user">0</h2></div>
+            </div>
+          </div>
+          <div class="summary">
+            <div class="summary-icon"><i class="fa fa-signal"></i></div>
+            <div class="summary-content">
+              <div class="summary-heading">Products</div>
+              <div><h2 id="products">0</h2></div>
+            </div>
+          </div>
+          <div class="summary">
+            <div class="summary-icon"><i class="fa fa-shopping-cart"></i></div>
+            <div class="summary-content">
+              <div class="summary-heading">Sales</div>
+              <div><h2 id="sales">0</h2></div>
+            </div>
+          </div>
+          <div class="summary">
+            <div class="summary-icon"><i class="fa fa-line-chart"></i></div>
+            <div class="summary-content">
+              <div class="summary-heading">Profit</div>
+              <div><h2 id="profit">0</h2></div>
+            </div>
+          </div>
+        </div>
+        <div class="charts-container">
+          <canvas id="myChart" width="500" height="200"></canvas>
+          <canvas id="myChart2" width="500" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const FetchSales = async() => {
+        const response = await fetch('http://localhost:3000/sales');
+        
+        const vertices = await response.json();
+
+        console.log(vertices);
+        const x_axis = vertices.map((x) => 
+          x.x
+        );
+        const datapoints = vertices.map((x) => 
+          x.y
+        );
+        
+        console.log(x_axis);
+        console.log(datapoints);
+
+      }
+
+      const ctx = document.getElementById("myChart").getContext("2d");
+      const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          label: [],
+          datasets: [{
+            label: 'sales in thepast 10 days',
+            data: [],
+            backgroundColor: 'black',
+            borderColor: 'black',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          responsive: true,
+        }
+      });
+      FetchSales();
+    </script>
+  </body>
+</html>

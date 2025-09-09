@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/site.css" />
+    <title>Form</title>
+  </head>
+  <body>
+    <div class="header">
+      <div class="toggle">
+        <a id="toggle-nav"><i class="fa fa-navicon cog"></i></a>
+      </div>
+    </div>
+    <div class="container">
+      <div class="sidebar" id="sidebar">
+        <a href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
+        <a href="form.html"><i class="fa fa-shopping-cart"></i> Forms</a>
+        <a href="tables.html"><i class="fa fa-shopping-bag"></i> Tables</a>
+      </div>
+      <div class="content">
+        <div class="left">
+          <h3>Product Registration</h3>
+          <div class="section-container">
+            <div class="section-header">Enter product details</div>
+            <div class="section-content">
+              <form onsubmit="HandleSubmit()" method="post">
+                <label class="label" for="product">Product Name</label>
+                <input type="text" id="productInput" name="product" min="5" max="50" required /><br />
+                <label class="label" for="price" >Price</label>
+                <input type="number" id="PriceInput" name="price" min="0" required /><br />
+                <label class="label" for="category">Quantity</label>
+                <input name="quantity" id="quantity" name="quantity" min="0" type="number" required />
+                <label class="label" for="description">Description</label>
+                <textarea rows="6" name="description" id="description" name="desc" required></textarea>
+                <button class="form-button" type="submit" id="save">Save</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="right"></div>
+      </div>
+    </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="span">&times;</span>
+        <h3>Message</h3>
+        <p id="pmessage"></p>
+      </div>
+    </div>
+    <script src="script2.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      async function HandleSubmit(){
+        const prod_input = document.getElementById("productInput");
+        const form = document.getElementById("form");
+        const price_input = document.getElementById("PriceInput");
+        const quantity_input = document.getElementById("quantity");
+        const description_input = document.getElementById("description");
+
+        const myModal = document.getElementById("myModal");
+        const message = document.getElementById("pmessage");
+      
+        if(prod_input.value.length < 5 || prod_input.value.length > 50){
+          message.innerText = "Product name must be between 5 and 50 characters.";
+          myModal.style.display = "block";
+          return;
+        }
+        if(description_input.value.length < 5 || description_input.value.length > 200){
+          message.innerText = "Description must be between 5 and 200 characters.";
+          myModal.style.display = "block";
+          return;
+        }
+        if(price_input.value <= 0 ){
+          message.innerText = "Price must be greater than 0.";
+          myModal.style.display = "block";
+          return;
+        }
+        if(quantity_input.value <= 0 ){
+          message.innerText = "Quantity must be greater than 0.";
+          myModal.style.display = "block";
+          return;
+        }
+        
+        const response = await fetch('http://localhost:3000/products/', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: prod_input.value, 
+            price: Number(price_input.value),
+            description: description_input.value,
+            quantity: Number(quantity_input.value)
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        })
+
+        console.log(response);
+
+      }
+    </script>
+  </body>
+</html>
